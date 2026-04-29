@@ -2,19 +2,14 @@ trigger:
 - main
 
 pool:
-  vmImage: ubuntu-latest
+  vmImage: windows-latest
 
 steps:
-- script: |
-    sudo apt-get update
-    sudo apt-get install -y wget unzip
-    wget https://releases.hashicorp.com/terraform/1.14.9/terraform_1.14.9_linux_amd64.zip
-    unzip terraform_1.14.9_linux_amd64.zip
-    sudo mv terraform /usr/local/bin/
+- powershell: |
     terraform -version
-  displayName: 'Install Terraform'
+  displayName: 'Check Terraform'
 
-- script: |
+- powershell: |
     terraform init
   displayName: 'Terraform Init'
   env:
@@ -23,11 +18,11 @@ steps:
     ARM_TENANT_ID: $(ARM_TENANT_ID)
     ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
 
-- script: |
+- powershell: |
     terraform validate
   displayName: 'Terraform Validate'
 
-- script: |
+- powershell: |
     terraform plan
   displayName: 'Terraform Plan'
   env:
@@ -36,7 +31,7 @@ steps:
     ARM_TENANT_ID: $(ARM_TENANT_ID)
     ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
 
-- script: |
+- powershell: |
     terraform apply -auto-approve
   displayName: 'Terraform Apply'
   env:
