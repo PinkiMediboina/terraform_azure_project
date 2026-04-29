@@ -4,26 +4,43 @@ trigger:
 pool:
   vmImage: ubuntu-latest
 
-variables:
-  ARM_CLIENT_ID: $(ARM_CLIENT_ID)
-  ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
-  ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
-  ARM_TENANT_ID: $(ARM_TENANT_ID)
-
 steps:
+- script: |
+    sudo apt-get update
+    sudo apt-get install -y wget unzip
+    wget https://releases.hashicorp.com/terraform/1.14.9/terraform_1.14.9_linux_amd64.zip
+    unzip terraform_1.14.9_linux_amd64.zip
+    sudo mv terraform /usr/local/bin/
+    terraform -version
+  displayName: 'Install Terraform'
 
-- task: TerraformInstaller@1
-  inputs:
-    terraformVersion: 'latest'
+- script: |
+    terraform init
+  displayName: 'Terraform Init'
+  env:
+    ARM_CLIENT_ID: $(ARM_CLIENT_ID)
+    ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
+    ARM_TENANT_ID: $(ARM_TENANT_ID)
+    ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
 
-- script: terraform init
-  displayName: Terraform Init
+- script: |
+    terraform validate
+  displayName: 'Terraform Validate'
 
-- script: terraform validate
-  displayName: Terraform Validate
+- script: |
+    terraform plan
+  displayName: 'Terraform Plan'
+  env:
+    ARM_CLIENT_ID: $(ARM_CLIENT_ID)
+    ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
+    ARM_TENANT_ID: $(ARM_TENANT_ID)
+    ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
 
-- script: terraform plan
-  displayName: Terraform Plan
-
-- script: terraform apply -auto-approve
-  displayName: Terraform Apply
+- script: |
+    terraform apply -auto-approve
+  displayName: 'Terraform Apply'
+  env:
+    ARM_CLIENT_ID: $(ARM_CLIENT_ID)
+    ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
+    ARM_TENANT_ID: $(ARM_TENANT_ID)
+    ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
