@@ -2,43 +2,50 @@ trigger:
 - main
 
 pool:
-  name: Azure Pipelines
-  vmImage: ubuntu-latest
+  vmImage: 'ubuntu-latest'
 
-steps:
-- checkout: self
+stages:
+- stage: Terraform
+  displayName: 'Run Terraform Steps'
+  jobs:
+    - job: InstallAndRunTerraform
+      displayName: 'Install Terraform and Run Commands'
+      steps:
+        - checkout: self
 
-- script: |
-    echo "Pipeline started successfully"
-    ls -la
-  displayName: "Start Pipeline"
+        # Install Terraform
+        - script: |
+            echo "Installing Terraform..."
+            sudo apt-get update
+            sudo apt-get install -y wget unzip
+            wget https://releases.hashicorp.com/terraform/1.14.9/terraform_1.14.9_linux_amd64.zip
+            unzip terraform_1.14.9_linux_amd64.zip
+            sudo mv terraform /usr/local/bin/
+            terraform -version
+          displayName: 'Install Terraform'
 
-- script: |
-    sudo apt-get update
-    sudo apt-get install -y wget unzip
-    wget https://releases.hashicorp.com/terraform/1.14.9/terraform_1.14.9_linux_amd64.zip
-    unzip terraform_1.14.9_linux_amd64.zip
-    sudo mv terraform /usr/local/bin/
-    terraform -version
-  displayName: "Install Terraform"
+        # Initialize Terraform
+        - script: |
+            terraform init -backend=false
+          displayName: 'Terraform Init'
 
-- script: |
-    terraform init -backend=false
-  displayName: "Terraform Init"
+        # Format Check
+        - script: |
+            terraform fmt -check
+          displayName: 'Terraform Format Check'
 
-- script: |
-    terraform fmt -check
-  displayName: "Terraform Format Check"
+        # Terraform Validation
+        - script: |
+            terraform validate
+          displayName: 'Terraform Validate'
 
-- script: |
-    terraform validate
-  displayName: "Terraform Validate"
-
-- script: |
-    terraform plan
-  displayName: "Terraform Plan"
-  env:
-    ARM_CLIENT_ID: $(ARM_CLIENT_ID)
-    ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
-    ARM_TENANT_ID: $(ARM_TENANT_ID)
-    ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
+        # Terraform Plan with Debugging
+        - script: |
+            terraform plan
+          displayName: 'Terraform Plan'
+          env:
+            ARM_CLIENT_ID: $(ARM_CLIENT_ID)
+            ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
+            ARM_TENANT_ID: $(ARM_TENANT_ID)
+            ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
+            TF_LOG: DEBUG
