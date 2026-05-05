@@ -98,7 +98,7 @@ resource "azurerm_linux_virtual_machine" "vm" {
   name                = "vm-demo"
   resource_group_name = azurerm_resource_group.rg.name
   location            = azurerm_resource_group.rg.location
-  size                = "Standard_B2ms"
+  size                = "Standard_D2s_v3"
   admin_username      = "azureuser"
 
   network_interface_ids = [
@@ -116,9 +116,9 @@ resource "azurerm_linux_virtual_machine" "vm" {
   }
 
   source_image_reference {
-    publisher = "Canonical"
-    offer     = "0001-com-ubuntu-server-jammy"
-    sku       = "22_04-lts"   
-    version   = "latest"
-  }
+  publisher = "Canonical"
+  offer     = "0001-com-ubuntu-server-jammy"
+  sku       = "22_04-lts"
+  version   = "latest"
+}
 }
