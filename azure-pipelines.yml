@@ -32,6 +32,10 @@ steps:
 
 - script: |
     terraform import azurerm_resource_group.rg /subscriptions/2408167f-6cad-455e-8038-dbdf2d441330/resourceGroups/rg-terraform-demo || true
+    terraform import azurerm_virtual_network.vnet /subscriptions/2408167f-6cad-455e-8038-dbdf2d441330/resourceGroups/rg-terraform-demo/providers/Microsoft.Network/virtualNetworks/vnet-demo || true
+    terraform import azurerm_public_ip.pip /subscriptions/2408167f-6cad-455e-8038-dbdf2d441330/resourceGroups/rg-terraform-demo/providers/Microsoft.Network/publicIPAddresses/pip-demo || true
+    terraform import azurerm_network_security_group.nsg /subscriptions/2408167f-6cad-455e-8038-dbdf2d441330/resourceGroups/rg-terraform-demo/providers/Microsoft.Network/networkSecurityGroups/nsg-demo || true
+    terraform import azurerm_linux_virtual_machine.vm /subscriptions/2408167f-6cad-455e-8038-dbdf2d441330/resourceGroups/rg-terraform-demo/providers/Microsoft.Compute/virtualMachines/vm-demo || true
   displayName: 'Import Existing Resources'
   env:
     ARM_CLIENT_ID: $(ARM_CLIENT_ID)
