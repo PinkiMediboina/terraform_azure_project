@@ -1,4 +1,3 @@
-
 terraform {
   required_providers {
     azurerm = {
@@ -6,7 +5,9 @@ terraform {
       version = "~> 3.0"
     }
   }
-}provider "azurerm" {
+}
+
+provider "azurerm" {
   features {}
 }
 
