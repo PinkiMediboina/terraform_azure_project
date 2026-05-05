@@ -39,6 +39,12 @@ steps:
     terraform import azurerm_network_interface.nic /subscriptions/2408167f-6cad-455e-8038-dbdf2d441330/resourceGroups/rg-terraform-demo/providers/Microsoft.Network/networkInterfaces/nic-demo || true
     terraform import azurerm_linux_virtual_machine.vm /subscriptions/2408167f-6cad-455e-8038-dbdf2d441330/resourceGroups/rg-terraform-demo/providers/Microsoft.Compute/virtualMachines/vm-demo || true
     terraform import azurerm_virtual_network.vnet /subscriptions/2408167f-6cad-455e-8038-dbdf2d441330/resourceGroups/rg-terraform-demo/providers/Microsoft.Network/virtualNetworks/vnet-demo || true
+    terraform import azurerm_subnet.subnet /subscriptions/2408167f-6cad-455e-8038-dbdf2d441330/resourceGroups/rg-terraform-demo/providers/Microsoft.Network/virtualNetworks/vnet-demo/subnets/subnet-demo || true
+    terraform import azurerm_public_ip.pip /subscriptions/2408167f-6cad-455e-8038-dbdf2d441330/resourceGroups/rg-terraform-demo/providers/Microsoft.Network/publicIPAddresses/pip-demo || true
+    terraform import azurerm_network_security_group.nsg /subscriptions/2408167f-6cad-455e-8038-dbdf2d441330/resourceGroups/rg-terraform-demo/providers/Microsoft.Network/networkSecurityGroups/nsg-demo || true
+    terraform import azurerm_network_interface.nic /subscriptions/2408167f-6cad-455e-8038-dbdf2d441330/resourceGroups/rg-terraform-demo/providers/Microsoft.Network/networkInterfaces/nic-demo || true
+    terraform import azurerm_linux_virtual_machine.vm /subscriptions/2408167f-6cad-455e-8038-dbdf2d441330/resourceGroups/rg-terraform-demo/providers/Microsoft.Compute/virtualMachines/vm-demo || true
+    terraform import azurerm_virtual_network.vnet /subscriptions/2408167f-6cad-455e-8038-dbdf2d441330/resourceGroups/rg-terraform-demo/providers/Microsoft.Network/virtualNetworks/vnet-demo || true
     terraform import azurerm_public_ip.pip /subscriptions/2408167f-6cad-455e-8038-dbdf2d441330/resourceGroups/rg-terraform-demo/providers/Microsoft.Network/publicIPAddresses/pip-demo || true
     terraform import azurerm_network_security_group.nsg /subscriptions/2408167f-6cad-455e-8038-dbdf2d441330/resourceGroups/rg-terraform-demo/providers/Microsoft.Network/networkSecurityGroups/nsg-demo || true
     terraform import azurerm_linux_virtual_machine.vm /subscriptions/2408167f-6cad-455e-8038-dbdf2d441330/resourceGroups/rg-terraform-demo/providers/Microsoft.Compute/virtualMachines/vm-demo || true
