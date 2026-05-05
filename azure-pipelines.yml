@@ -4,12 +4,6 @@ trigger:
 pool:
   vmImage: 'ubuntu-latest'
 
-env:
-  ARM_CLIENT_ID: $(ARM_CLIENT_ID)
-  ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
-  ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
-  ARM_TENANT_ID: $(ARM_TENANT_ID)
-
 steps:
 - script: |
     wget https://releases.hashicorp.com/terraform/1.14.9/terraform_1.14.9_linux_amd64.zip
@@ -19,25 +13,28 @@ steps:
   displayName: 'Install Terraform'
 
 - script: |
-    export ARM_CLIENT_ID=$(ARM_CLIENT_ID)
-    export ARM_CLIENT_SECRET=$(ARM_CLIENT_SECRET)
-    export ARM_SUBSCRIPTION_ID=$(ARM_SUBSCRIPTION_ID)
-    export ARM_TENANT_ID=$(ARM_TENANT_ID)
-    terraform init
-  displayName: 'terraform init -upgrade'
+    terraform init -upgrade
+  displayName: 'Terraform Init'
+  env:
+    ARM_CLIENT_ID: $(ARM_CLIENT_ID)
+    ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
+    ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
+    ARM_TENANT_ID: $(ARM_TENANT_ID)
 
 - script: |
-    export ARM_CLIENT_ID=$(ARM_CLIENT_ID)
-    export ARM_CLIENT_SECRET=$(ARM_CLIENT_SECRET)
-    export ARM_SUBSCRIPTION_ID=$(ARM_SUBSCRIPTION_ID)
-    export ARM_TENANT_ID=$(ARM_TENANT_ID)
     terraform plan
   displayName: 'Terraform Plan'
+  env:
+    ARM_CLIENT_ID: $(ARM_CLIENT_ID)
+    ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
+    ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
+    ARM_TENANT_ID: $(ARM_TENANT_ID)
 
 - script: |
-    export ARM_CLIENT_ID=$(ARM_CLIENT_ID)
-    export ARM_CLIENT_SECRET=$(ARM_CLIENT_SECRET)
-    export ARM_SUBSCRIPTION_ID=$(ARM_SUBSCRIPTION_ID)
-    export ARM_TENANT_ID=$(ARM_TENANT_ID)
     terraform apply -auto-approve
   displayName: 'Terraform Apply'
+  env:
+    ARM_CLIENT_ID: $(ARM_CLIENT_ID)
+    ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
+    ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
+    ARM_TENANT_ID: $(ARM_TENANT_ID)
