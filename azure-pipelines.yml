@@ -6,6 +6,12 @@ pool:
 
 steps:
 - script: |
+<<<<<<< HEAD
+=======
+    echo "Installing Terraform..."
+    sudo apt-get update
+    sudo apt-get install -y wget unzip
+>>>>>>> 42d3a15dfad23806be394a895c7d2dd6c632640e
     wget https://releases.hashicorp.com/terraform/1.14.9/terraform_1.14.9_linux_amd64.zip
     unzip terraform_1.14.9_linux_amd64.zip
     sudo mv terraform /usr/local/bin/
@@ -13,6 +19,7 @@ steps:
   displayName: 'Install Terraform'
 
 - script: |
+<<<<<<< HEAD
     terraform init
   displayName: 'Terraform Init'
   env:
@@ -20,6 +27,18 @@ steps:
     ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
     ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
     ARM_TENANT_ID: $(ARM_TENANT_ID)
+=======
+    terraform init -backend=false
+  displayName: 'Terraform Init'
+
+- script: |
+    terraform fmt -check
+  displayName: 'Terraform Format Check'
+
+- script: |
+    terraform validate
+  displayName: 'Terraform Validate'
+>>>>>>> 42d3a15dfad23806be394a895c7d2dd6c632640e
 
 - script: |
     terraform plan
@@ -27,8 +46,14 @@ steps:
   env:
     ARM_CLIENT_ID: $(ARM_CLIENT_ID)
     ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
+<<<<<<< HEAD
     ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
     ARM_TENANT_ID: $(ARM_TENANT_ID)
+=======
+    ARM_TENANT_ID: $(ARM_TENANT_ID)
+    ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
+    TF_LOG: DEBUG  # Enables Terraform debug logs
+>>>>>>> 42d3a15dfad23806be394a895c7d2dd6c632640e
 
 - script: |
     terraform apply -auto-approve
@@ -36,5 +61,11 @@ steps:
   env:
     ARM_CLIENT_ID: $(ARM_CLIENT_ID)
     ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
+<<<<<<< HEAD
     ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
     ARM_TENANT_ID: $(ARM_TENANT_ID)
+=======
+    ARM_TENANT_ID: $(ARM_TENANT_ID)
+    ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
+    TF_LOG: DEBUG  # Enables Terraform debug logs
+>>>>>>> 42d3a15dfad23806be394a895c7d2dd6c632640e
