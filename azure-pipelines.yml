@@ -1,65 +1,47 @@
 trigger:
-- main
+  - main
 
 pool:
-  vmImage: 'ubuntu-latest'
+  vmImage: ubuntu-latest
 
 steps:
-- script: |
-    wget https://releases.hashicorp.com/terraform/1.14.9/terraform_1.14.9_linux_amd64.zip
-    unzip terraform_1.14.9_linux_amd64.zip
-    sudo mv terraform /usr/local/bin/
-    terraform -version
-  displayName: 'Install Terraform'
+  - checkout: self
 
-- script: |
-    terraform init -upgrade
-  displayName: 'Terraform Init'
-  env:
-    ARM_CLIENT_ID: $(ARM_CLIENT_ID)
-    ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
-    ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
-    ARM_TENANT_ID: $(ARM_TENANT_ID)
+  - script: |
+      wget https://releases.hashicorp.com/terraform/1.5.7/terraform_1.5.7_linux_amd64.zip
+      unzip terraform_1.5.7_linux_amd64.zip
+      sudo mv terraform /usr/local/bin/
+      terraform version
+    displayName: Install Terraform 1.5.7
 
-- script: |
-    terraform plan
-  displayName: 'Terraform Plan'
-  env:
-    ARM_CLIENT_ID: $(ARM_CLIENT_ID)
-    ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
-    ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
-    ARM_TENANT_ID: $(ARM_TENANT_ID)
+  - script: terraform init -reconfigure
+    displayName: Terraform Init
+    env:
+      ARM_CLIENT_ID: $(ARM_CLIENT_ID)
+      ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
+      ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
+      ARM_TENANT_ID: $(ARM_TENANT_ID)
 
-- script: |
-    terraform import azurerm_resource_group.rg /subscriptions/2408167f-6cad-455e-8038-dbdf2d441330/resourceGroups/rg-terraform-demo || true
-    terraform import azurerm_virtual_network.vnet /subscriptions/2408167f-6cad-455e-8038-dbdf2d441330/resourceGroups/rg-terraform-demo/providers/Microsoft.Network/virtualNetworks/vnet-demo || true
-    terraform import azurerm_subnet.subnet /subscriptions/2408167f-6cad-455e-8038-dbdf2d441330/resourceGroups/rg-terraform-demo/providers/Microsoft.Network/virtualNetworks/vnet-demo/subnets/subnet-demo || true
-    terraform import azurerm_public_ip.pip /subscriptions/2408167f-6cad-455e-8038-dbdf2d441330/resourceGroups/rg-terraform-demo/providers/Microsoft.Network/publicIPAddresses/pip-demo || true
-    terraform import azurerm_network_security_group.nsg /subscriptions/2408167f-6cad-455e-8038-dbdf2d441330/resourceGroups/rg-terraform-demo/providers/Microsoft.Network/networkSecurityGroups/nsg-demo || true
-    terraform import azurerm_network_interface.nic /subscriptions/2408167f-6cad-455e-8038-dbdf2d441330/resourceGroups/rg-terraform-demo/providers/Microsoft.Network/networkInterfaces/nic-demo || true
-    terraform import azurerm_linux_virtual_machine.vm /subscriptions/2408167f-6cad-455e-8038-dbdf2d441330/resourceGroups/rg-terraform-demo/providers/Microsoft.Compute/virtualMachines/vm-demo || true
-    terraform import azurerm_virtual_network.vnet /subscriptions/2408167f-6cad-455e-8038-dbdf2d441330/resourceGroups/rg-terraform-demo/providers/Microsoft.Network/virtualNetworks/vnet-demo || true
-    terraform import azurerm_subnet.subnet /subscriptions/2408167f-6cad-455e-8038-dbdf2d441330/resourceGroups/rg-terraform-demo/providers/Microsoft.Network/virtualNetworks/vnet-demo/subnets/subnet-demo || true
-    terraform import azurerm_public_ip.pip /subscriptions/2408167f-6cad-455e-8038-dbdf2d441330/resourceGroups/rg-terraform-demo/providers/Microsoft.Network/publicIPAddresses/pip-demo || true
-    terraform import azurerm_network_security_group.nsg /subscriptions/2408167f-6cad-455e-8038-dbdf2d441330/resourceGroups/rg-terraform-demo/providers/Microsoft.Network/networkSecurityGroups/nsg-demo || true
-    terraform import azurerm_network_interface.nic /subscriptions/2408167f-6cad-455e-8038-dbdf2d441330/resourceGroups/rg-terraform-demo/providers/Microsoft.Network/networkInterfaces/nic-demo || true
-    terraform import azurerm_linux_virtual_machine.vm /subscriptions/2408167f-6cad-455e-8038-dbdf2d441330/resourceGroups/rg-terraform-demo/providers/Microsoft.Compute/virtualMachines/vm-demo || true
-    terraform import azurerm_virtual_network.vnet /subscriptions/2408167f-6cad-455e-8038-dbdf2d441330/resourceGroups/rg-terraform-demo/providers/Microsoft.Network/virtualNetworks/vnet-demo || true
-    terraform import azurerm_public_ip.pip /subscriptions/2408167f-6cad-455e-8038-dbdf2d441330/resourceGroups/rg-terraform-demo/providers/Microsoft.Network/publicIPAddresses/pip-demo || true
-    terraform import azurerm_network_security_group.nsg /subscriptions/2408167f-6cad-455e-8038-dbdf2d441330/resourceGroups/rg-terraform-demo/providers/Microsoft.Network/networkSecurityGroups/nsg-demo || true
-    terraform import azurerm_linux_virtual_machine.vm /subscriptions/2408167f-6cad-455e-8038-dbdf2d441330/resourceGroups/rg-terraform-demo/providers/Microsoft.Compute/virtualMachines/vm-demo || true
-  displayName: 'Import Existing Resources'
-  env:
-    ARM_CLIENT_ID: $(ARM_CLIENT_ID)
-    ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
-    ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
-    ARM_TENANT_ID: $(ARM_TENANT_ID)
+  - script: terraform validate
+    displayName: Terraform Validate
+    env:
+      ARM_CLIENT_ID: $(ARM_CLIENT_ID)
+      ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
+      ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
+      ARM_TENANT_ID: $(ARM_TENANT_ID)
 
-- script: |
-    terraform apply -auto-approve
-  displayName: 'Terraform Apply'
-  env:
-    ARM_CLIENT_ID: $(ARM_CLIENT_ID)
-    ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
-    ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
-    ARM_TENANT_ID: $(ARM_TENANT_ID)
+  - script: terraform plan -out=tfplan
+    displayName: Terraform Plan
+    env:
+      ARM_CLIENT_ID: $(ARM_CLIENT_ID)
+      ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
+      ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
+      ARM_TENANT_ID: $(ARM_TENANT_ID)
+
+  - script: terraform apply -auto-approve tfplan
+    displayName: Terraform Apply
+    env:
+      ARM_CLIENT_ID: $(ARM_CLIENT_ID)
+      ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
+      ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
+      ARM_TENANT_ID: $(ARM_TENANT_ID)
